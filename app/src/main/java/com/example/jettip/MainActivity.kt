@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
@@ -35,6 +34,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,6 +45,8 @@ import androidx.compose.ui.unit.dp
 import com.example.jettip.components.InputField
 import com.example.jettip.ui.theme.JetTipTheme
 import com.example.jettip.widgets.RoundIconButton
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,7 +71,8 @@ fun MyApp(content: @Composable () -> Unit) {
     JetTipTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background) {
+            color = MaterialTheme.colorScheme.background
+        ) {
             content()
         }
     }
@@ -156,6 +159,7 @@ fun BillForm(
 
 @Composable
 fun SplitRow(splitByState: MutableIntState, range: IntRange) {
+    val coroutineScope = rememberCoroutineScope()
     Row(
         modifier = Modifier
             .padding(3.dp)
@@ -171,6 +175,15 @@ fun SplitRow(splitByState: MutableIntState, range: IntRange) {
                 imageVector = Icons.Default.Remove,
                 onClick = {
                     splitByState.intValue = maxOf(1, splitByState.intValue - 1)
+                },
+                onLongClick = { longPressState ->
+                    longPressState.value = true
+                    coroutineScope.launch {
+                        while (longPressState.value) {
+                            splitByState.intValue = maxOf(1, splitByState.intValue - 1)
+                            delay(80)
+                        }
+                    }
                 }
             )
             Text(
@@ -183,7 +196,18 @@ fun SplitRow(splitByState: MutableIntState, range: IntRange) {
                     if (splitByState.intValue < range.last) {
                         splitByState.intValue += 1
                     }
+                },
+                longPressState = remember { mutableStateOf(false) },
+                onLongClick = { longPressState ->
+                    longPressState.value = true
+                    coroutineScope.launch {
+                        while (longPressState.value) {
+                            splitByState.intValue += 1
+                            delay(80)
+                        }
+                    }
                 }
+
             )
         }
     }
