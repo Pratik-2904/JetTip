@@ -29,11 +29,11 @@ val IconButtonSizeModifier = Modifier.size(40.dp)
 @Preview
 @Composable
 fun RoundIconButton(
+    modifier: Modifier = Modifier,
     imageVector: ImageVector = Icons.Default.Add,
     onClick: () -> Unit = {},
     onLongClick: (longPressState: MutableState<Boolean>) -> Unit = {},
     onRelease: () -> Unit = {},
-    modifier: Modifier = Modifier,
     longPressState: MutableState<Boolean> = remember { mutableStateOf(false) },
     tint: Color = MaterialTheme.colorScheme.onBackground,
     backgroundColor: Color = MaterialTheme.colorScheme.background,
