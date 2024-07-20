@@ -28,6 +28,9 @@ android {
                 "proguard-rules.pro"
             )
         }
+        create("customDebugType") {
+            isDebuggable = true
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -50,6 +53,9 @@ android {
 }
 
 dependencies {
+
+    //extra icons
+    implementation(libs.androidx.material.icons.extended)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
